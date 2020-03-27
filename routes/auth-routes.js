@@ -37,15 +37,20 @@ router.get("/github/callback", (req, res) => {
     headers: {
       accept: "application/json"
     }
-  }).then(response => {
-    const accessToken = response.data.access_token;
-    req.session.accessToken = accessToken;
-    const data = getUser(accessToken, (newUserAllowed = true));
-    console.log("Auth is calling ", data);
-    if (data.error) {
-      res.redirect(`/auth/login?error=true&message=${data.error}`);
+  }).then(async response => {
+    if (response.data.access_token) {
+      const accessToken = response.data.access_token;
+      req.session.accessToken = accessToken;
+      const user = await getUser(accessToken, (newUserAllowed = true));
+      if (user === null || user === undefined) {
+        res.redirect(`/auth/login?error=true&message=No User Found`);
+      } else {
+        res.redirect("/profile");
+      }
     } else {
-      res.redirect("/profile");
+      res.redirect(
+        `/auth/login?error=true&message=Unable to fetch AccessToken`
+      );
     }
   });
 });

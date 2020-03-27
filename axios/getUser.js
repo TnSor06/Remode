@@ -6,39 +6,46 @@ function getUser(accessToken, newUserAllowed = false) {
     .get("https://api.github.com/user", {
       headers: { Authorization: `token ${accessToken}` }
     })
-    .then(response => {
+    .then(async response => {
       const profile = response.data;
-      console.log("HEre");
       if (newUserAllowed) {
-        console.log("Sending");
-        const user = User.findOne({ githubIdId: profile.id }, (error, user) => {
-          console.log("Check1:", user, error);
-          if (error) {
-            return { error: error, user: null };
-          } else if (user) {
-            return { user, error: null };
-          } else {
-            const newUser = new User({
-              githubId: profile.id,
-              userName: profile.login,
-              thumbnail: profile.avatar_url
-            }).save((error, user) => {
-              console.log("CheckNewUser:", user, error);
-              return { error, user };
-            });
-            return newUser;
+        const user = await User.findOne(
+          { githubID: profile.id },
+          async (error, user) => {
+            let returnVal = null;
+            if (error !== null) {
+              returnVal = { error: error, user: null };
+            } else if (user !== null) {
+              returnVal = { user: user, error: null };
+            } else {
+              let newUser = new User({
+                githubID: profile.id,
+                userName: profile.login,
+                thumbnail: profile.avatar_url
+              });
+              newUser = await newUser.save((error, user) => {
+                if (error !== null) {
+                  returnVal = { error, user: null };
+                } else {
+                  returnVal = { error: null, user };
+                }
+              });
+            }
+            return returnVal;
           }
-        });
+        );
         return user;
       } else {
-        const user = User.findOne({ githubIdId: profile.id }, (error, user) => {
-          console.log("Check2:", user, error);
-          if (error) {
-            return { error: error, user: null };
-          } else if (user) {
-            return { user, error: null };
+        const user = await User.findOne(
+          { githubID: profile.id },
+          (error, user) => {
+            if (error) {
+              return { error: error, user: null };
+            } else if (user) {
+              return { user, error: null };
+            }
           }
-        });
+        );
         return user;
       }
     })
@@ -50,12 +57,5 @@ function getUser(accessToken, newUserAllowed = false) {
     });
   return result;
 }
-async function run() {
-  const result = await getUser(
-    "eyJhY2Nlc3NUb2tlbiI6IjE3Y2Y5ZmY0YzFlNzM2ZDE5ZGM0MjYyMTc1MzBjMTViZDJlY2NjMzYifQ==",
-    (newUserAllowed = true)
-  );
-  console.log(result);
-}
-run();
+
 module.exports = { getUser };

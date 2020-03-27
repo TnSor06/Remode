@@ -9,13 +9,12 @@ const authCheck = (req, res, next) => {
   }
 };
 
-router.get("/", authCheck, (req, res) => {
-  const data = getUser(req.session.accessToken);
-  console.log("Profile-route is calling ", data);
-  if (data.error) {
-    res.redirect(`/auth/login?error=true&message=${data.error}`);
+router.get("/", authCheck, async (req, res) => {
+  const user = await getUser(req.session.accessToken);
+  if (user === null || user === undefined) {
+    res.redirect(`/auth/login?error=true&message=No User Found`);
   } else {
-    res.render("profile", { user: data.user });
+    res.render("profile", { user: user });
   }
 });
 

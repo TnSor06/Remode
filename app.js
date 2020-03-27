@@ -18,15 +18,19 @@ app.use(
     name: "RemodeSession"
   })
 );
-console.log(keys.mongodb.dbURI);
+
 // connect to mongodb
-mongoose.connect(keys.mongodb.dbURI, { useMongoClient: true }, err => {
-  if (err) {
-    console.log("Cannot connect to Database", err);
-  } else {
-    console.log("Connected to mongodb");
+mongoose.connect(
+  keys.mongodb.dbURI,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  err => {
+    if (err) {
+      console.log("Cannot connect to Database", err);
+    } else {
+      console.log("Connected to mongodb");
+    }
   }
-});
+);
 
 // set up routes
 app.use("/auth", authRoutes);
