@@ -20,6 +20,7 @@ function getUser(accessToken, newUserAllowed = false) {
             } else {
               let newUser = new User({
                 githubID: profile.id,
+                githubNodeId: profile.node_id,
                 userName: profile.login,
                 thumbnail: profile.avatar_url
               });

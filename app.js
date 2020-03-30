@@ -2,9 +2,10 @@ const express = require("express");
 const cookieSession = require("cookie-session");
 const authRoutes = require("./routes/auth-routes");
 const profileRoutes = require("./routes/profile-routes");
+const projectRoutes = require("./routes/project-routes");
 const mongoose = require("mongoose");
 const keys = require("./config/keys");
-
+const bodyParser = require("body-parser")
 const app = express();
 
 // set view engine
@@ -19,6 +20,10 @@ app.use(
   })
 );
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 // connect to mongodb
 mongoose.connect(
   keys.mongodb.dbURI,
@@ -33,12 +38,13 @@ mongoose.connect(
 );
 
 // set up routes
+app.use("/projects",projectRoutes);
 app.use("/auth", authRoutes);
-app.use("/profile", profileRoutes);
+app.use("/", profileRoutes);
 
-// create home route
-app.get("/", (req, res) => {
-  res.render("home", { user: req.user });
+// For missing routes
+app.get('*', async function(req, res){
+  res.render("404");
 });
 
 app.listen(3000, () => {

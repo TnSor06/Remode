@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <% if (user) { %>
+        <a class="navbar-brand" href="#">
+            <img src="<%= user.thumbnail %>" height="48" width="48"/> <%= user.userName %>
+        </a>
+    <% } %>
+    <ul class="navbar-nav">
+        <% if (user) { %>
+            <li class="nav-item">
+                <a class="nav-link" href="/auth/logout">LogOut</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/projects">My Projects</a>
+            </li>
+        <% } else { %>
+            <li class="nav-item">
+                <a class="nav-link" href="/auth/login">LogIn</a>
+            </li>
+        <% } %>
+      <li class="nav-item">
+        <a class="nav-link" href="/">Homepage</a>
+      </li>
+    </ul>
+  </nav>

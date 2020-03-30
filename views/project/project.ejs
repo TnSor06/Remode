@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Remode Projects</title>
+    <%- include('../layout/head'); %>
+  </head>
+  <body>
+    <%- include('../layout/navbar', {user: locals.user}); %>
+    <div class="container">
+      <% if (locals.user) { %>
+      <h1>Your projects!<%= user.userName %></h1>
+      <% if (locals.error) { %>
+      <p><%= locals.message %></p>
+      <% } %>
+      <div class="container">
+        <a class="btn btn-outline-info" href="/projects/create-project"
+          >Create New Project</a
+        >
+        <% if (locals.projects) { %> <% for(var i=0; i < projects.length; i++)
+        {%>
+        <div class="card" style="margin: 10px 0;">
+          <div class="card-header">
+            URL:
+            <a href="<%= projects[i].repoURL %>"
+              ><%= projects[i].repoNameWithOwner %></a
+            >
+          </div>
+          <div class="card-body"><h3><%= projects[i].projectName %></h3></div>
+          <div class="card-footer">
+            <p><%= projects[i].status %></p>
+            <button type="button" class="btn btn-primary">Primary</button>
+            <button type="button" class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-primary">
+              <span class="spinner-border spinner-border-sm"></span>
+              Loading..
+            </button>
+          </div>
+        </div>
+        <% } %> <% } %>
+      </div>
+      <% } %>
+    </div>
+  </body>
+</html>

@@ -1,61 +1,24 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <title>OAuth Tutorials</title>
-        <style>
-            body{
-                font-family: arial;
-                margin: 0;
-            }
-            nav{
-                background: #ff5353;
-                padding: 20px 10px;
-            }
-            nav ul{
-                max-width: 960px;
-                margin: 0 auto;
-                padding: 0;
-            }
-            nav li{
-                list-style-type: none;
-                display: inline-block;
-                margin: 0 10px 0 0;
-            }
-            nav a{
-                color: #fff;
-                font-size: 18px;
-                background: rgba(255,255,255,0.2);
-                text-decoration: none;
-                padding: 10px;
-                display: block;
-            }
-            main, header{
-                max-width: 960px;
-                margin: 30px auto;
-                padding: 0 10px;
-                color: #333;
-            }
-        </style>
+        <title>Remode</title>
+        <%- include('layout/head'); %>
     </head>
     <body>
-        <nav>
-            <ul>
-                <% if (user) { %>
-                <li><a href="/auth/logout">Log out</a></li>
-                <% } else { %>
-                <li><a href="/auth/login">Login</a></li>
-                <% } %>
-                <li><a href="/">Homepage</a></li>
-                <li><a href="/profile">Profile</a></li>
-            </ul>
-        </nav>
-        <header>
-            <h1>Net Ninja OAuth Tut's</h1>
-            <h2>Homepage</h2>
-        </header>
-        <main>
-            <p>Probably the best OAuth tutorials on the planet :)</p>
-        </main>
+        <%- include('layout/navbar', {user: locals.user}); %>
+        <div class="container">
+        <% if (locals.user) { %>
+            <h1>Welcome to Remode!<%= user.userName %></h1>
+            <% if (locals.error) { %>
+                <p><%= locals.message %></p>
+            <% } %>
+            <div class="container">
+                <a class="btn btn-outline-info" href="/projects/create-project">Create New Project</a>
+                <a class="btn btn-outline-dark" href="/projects">Continue With Existing Project</a>
+            </div>
+        <% } else { %>
+            <h1>Welcome to Remode!Login to Continue</h1>
+        <% } %>
+        </div>
     </body>
 </html>
