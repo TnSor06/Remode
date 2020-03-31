@@ -60,9 +60,17 @@ router.post("/create-project", authCheck, async (req, res) => {
         image: req.body.programmingLanguage,
         tag: req.body.version
       },
-      ...(req.body.database && { container2: { image: req.body.database } })
+      ...(req.body.database && { hasDB: true })
     };
     socket.emit("newProject", newProject);
+    if (req.body.database) {
+      const newProject = {
+        project: data.project,
+        container2: { image: req.body.database },
+        hasDB: true
+      };
+      socket.emit("newProject", newProject);
+    }
     res.redirect("/projects");
   } else if (data.error) {
     res.redirect(
@@ -87,11 +95,11 @@ router.get("/", authCheck, async (req, res) => {
     } else {
       const projects = await Project.find(
         { $or: [{ owner: user._id }, { collaborators: { $in: [user._id] } }] },
-        (error, user) => {
+        (error, project) => {
           if (error) {
-            return { error: error, user: null };
-          } else if (user) {
-            return { user, error: null };
+            return { error: error, project: null };
+          } else if (project) {
+            return { project, error: null };
           }
         }
       );
