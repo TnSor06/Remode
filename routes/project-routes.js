@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const querystring = require("querystring");
 
+const socket = require("../socket").socket;
 const getUser = require("../axios/getUser").getUser;
 const createRepo = require("../axios/createGetRepo").createRepo;
 const Project = require("../models/user-model").Project;
@@ -51,9 +52,17 @@ router.post("/create-project", authCheck, async (req, res) => {
     );
   }
   const data = await createRepo(req.session.accessToken, req.body, user);
-  if (data === null) {
+  if (data.project) {
     // init containers
-    console.log(req.body);
+    const newProject = {
+      project: data.project,
+      container1: {
+        image: req.body.programmingLanguage,
+        tag: req.body.version
+      },
+      ...(req.body.database && { container2: { image: req.body.database } })
+    };
+    socket.emit("newProject", newProject);
     res.redirect("/projects");
   } else if (data.error) {
     res.redirect(

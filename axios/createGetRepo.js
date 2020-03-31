@@ -1,6 +1,5 @@
 const axios = require("axios");
 const { User, Project, Container } = require("../models/user-model");
-const getUser = require("../axios/getUser").getUser;
 
 async function createRepo(accessToken, data, userData) {
   if (userData.error) {
@@ -85,7 +84,14 @@ async function createRepo(accessToken, data, userData) {
             return returnVal;
           }
         );
-        return project;
+        const projectData = {
+          project: {
+            repoNameWithOwner: res.nameWithOwner,
+            repoURL: res.url,
+            repoID: res.databaseId
+          }
+        };
+        return projectData;
       } else if (response.data.errors) {
         return {
           error: response.data.errors[0].message,
