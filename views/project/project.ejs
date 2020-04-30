@@ -27,12 +27,19 @@
           </div>
           <div class="card-body"><h3><%= projects[i].projectName %></h3></div>
           <div class="card-footer">
-            <p><strong>Status:</strong><%= projects[i].status %></p>
-            <button type="button" class="btn btn-primary">Primary</button>
-            <button type="button" class="btn btn-secondary">Secondary</button>
-            <button class="btn btn-primary">
-              <span class="spinner-border spinner-border-sm"></span>
-              Loading..
+            <!-- <strong>Status:</strong><p id=status-repoID-<%= projects[i].repoID %>><%= projects[i].status %></p> -->
+            <button type="button" id=button-repoID-<%= projects[i].repoID %> 
+              class="btn <% if(projects[i].status === "Initialized") {%> btn-secondary" >
+              Loading... <span class="spinner-border spinner-border-sm"></span>
+              <%} else if (projects[i].status === "Finished 1/2" || projects[i].status === "Registered 1/2") {%>  btn-warning" >
+                Working on it... <span class="spinner-border spinner-border-sm"></span>
+              <%} else if (projects[i].status==="Built") {%>  btn-info" >
+                Almost Done... <span class="spinner-border spinner-border-sm"></span>
+              <%} else if (projects[i].status==="Registered") {%>  btn-success" onClick="redirect()">
+                Start
+              <% } else {%> btn-success" onClick="redirect()">
+                Start
+              <% } %>
             </button>
           </div>
         </div>
@@ -41,4 +48,45 @@
       <% } %>
     </div>
   </body>
+  <script>
+    function redirect() {
+      window.location.replace("http://127.0.0.1:3000/projects/255649287");
+    }
+    var socket = io.connect('http://localhost:3030');
+    // Listen for events
+    socket.on('connect', function() {
+      console.log('Connection Check', socket.connected);
+    });
+    socket.on('repoID', function(data){
+      const projectStatus = document.getElementById(`status-repoID-${data.repoID}`)
+      const projectButton = document.getElementById(`button-repoID-${data.repoID}`)
+      projectStatus.textContent = `${data.status}`;
+      if(projectStatus.textContent==="Finished 1/2" || projectStatus.textContent==="Registered 1/2"){
+        projectButton.classList.remove(...projectButton.classList)
+        projectButton.innerHTML = `Working on it... <span class="spinner-border spinner-border-sm"></span>`;
+        projectButton.classList.add("btn","btn-warning")
+      } else if(projectStatus.textContent==="Built"){
+        projectButton.classList.remove(...projectButton.classList)
+        projectButton.innerHTML = `Almost Done... <span class="spinner-border spinner-border-sm"></span>`;
+        projectButton.classList.add("btn","btn-info")
+      } else if(projectStatus.textContent==="Registered"){
+        projectButton.classList.remove(...projectButton.classList)
+        projectButton.innerHTML = `Start`;
+        projectButton.classList.add("btn","btn-success")
+        projectButton.addEventListener("click", function(){
+          window.location.replace("http://127.0.0.1:3000/projects/255649287");
+        }); 
+      } else{
+        projectButton.classList.remove(...projectButton.classList)
+        projectButton.innerHTML = `Start`;
+        projectButton.classList.add("btn","btn-success")
+        projectButton.addEventListener("click", function(){
+          window.location.replace("http://127.0.0.1:3000/projects/255649287");
+        }); 
+        // projectButton.classList.remove(...projectButton.classList)
+        // projectButton.innerHTML = `Error`;
+        // projectButton.classList.add("btn","btn-warning")
+      }
+    });
+    </script>
 </html>

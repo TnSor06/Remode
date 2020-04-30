@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Your Project</title>
+    <%- include('../layout/head'); %>
+  </head>
+  <body>
+    <%- include('../layout/navbar', {user: locals.user}); %>
+    <div class="container">
+      <% if (locals.user) { %>
+      <h1>Your projects!<%= user.userName %></h1>
+      <% if (locals.error) { %>
+      <p><%= locals.message %></p>
+      <% } %>
+      <div class="container">
+        <div class="card-body">
+          <h4 class="card-title">Your Code</h4>
+          <p class="card-text">Python 3.6</p>
+          <a href="http://0.0.0.0:8080" target="_blank" class="card-link"
+            >Click</a
+          >
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">Your Database</h4>
+          <p class="card-text">MySQL</p>
+          <p class="card-text">Username: tnsor06</p>
+          <p class="card-text">Secret: 255649287</p>
+          <p class="card-text">LiveAt: localhost:8686</p>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </body>
+  <script>
+    //   code
+  </script>
+</html>

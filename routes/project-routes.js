@@ -115,7 +115,40 @@ router.get("/", authCheck, async (req, res) => {
   }
 });
 
-router.get("/:id", authCheck, async (req, res) => {
+// router.get("/:id", authCheck, async (req, res) => {
+//   if (req.session.accessToken) {
+//     const user = await getUser(req.session.accessToken);
+//     if (user === null || user === undefined) {
+//       res.redirect(
+//         `/auth/login?${querystring.stringify({
+//           error: true,
+//           message: "No User Found"
+//         })}`
+//       );
+//     } else {
+//       // const projects = await Project.find(
+//       //     { $or:[{ owner.githubID : user.githubID }] },
+//       //     (error, user) => {
+//       //       if (error) {
+//       //         return { error: error, user: null };
+//       //       } else if (user) {
+//       //         return { user, error: null };
+//       //       }
+//       //     }
+//       //   );
+//       res.render("project/project", { user: user });
+//     }
+//   } else {
+//     res.redirect(
+//       `/auth/login?${querystring.stringify({
+//         error: true,
+//         message: "Need to login"
+//       })}`
+//     );
+//   }
+// });
+
+router.get("/255649287", authCheck, async (req, res) => {
   if (req.session.accessToken) {
     const user = await getUser(req.session.accessToken);
     if (user === null || user === undefined) {
@@ -126,17 +159,7 @@ router.get("/:id", authCheck, async (req, res) => {
         })}`
       );
     } else {
-      // const projects = await Project.find(
-      //     { $or:[{ owner.githubID : user.githubID }] },
-      //     (error, user) => {
-      //       if (error) {
-      //         return { error: error, user: null };
-      //       } else if (user) {
-      //         return { user, error: null };
-      //       }
-      //     }
-      //   );
-      res.render("project/project", { user: user });
+      res.render("project/sample", { user: user });
     }
   } else {
     res.redirect(
